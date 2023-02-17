@@ -3,7 +3,7 @@ const Project = require("../models/projectModels");
 
 //get all projects
 const getAllProjectController = async (req, res) => {
-  const projects = await Project.find({});
+  const projects = await Project.find({}).sort({ createdAt: -1 });
   try {
     res.status(200).json(projects);
   } catch (err) {
