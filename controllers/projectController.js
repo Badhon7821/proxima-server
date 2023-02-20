@@ -33,11 +33,38 @@ const getSingleProjectController = async (req, res) => {
 
 // Post a project
 const postProjectController = async (req, res) => {
-  const data = req.body;
+  const { title, tech, budget, duration, manager, dev } = req.body;
+
+  let emptyField = [];
+
+  if (!title) {
+    emptyField.push("title");
+  }
+  if (!tech) {
+    emptyField.push("tech");
+  }
+  if (!budget) {
+    emptyField.push("budget");
+  }
+  if (!duration) {
+    emptyField.push("duration");
+  }
+  if (!manager) {
+    emptyField.push("manager");
+  }
+  if (!dev) {
+    emptyField.push("dev");
+  }
+
+  if (emptyField.length > 0) {
+    return res
+      .status(400)
+      .json({ error: "Please fill in the empty field", emptyField });
+  }
 
   try {
     const project = await Project.create({
-      ...data,
+      ...req.body,
     });
     res.status(200).json(project);
   } catch (err) {
