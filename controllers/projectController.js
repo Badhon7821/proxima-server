@@ -92,11 +92,44 @@ const deleteProjectController = async (req, res) => {
 const updateProjectController = async (req, res) => {
   const { id } = req.params;
 
+  const { title, tech, budget, duration, manager, dev } = req.body;
+
+  let emptyField = [];
+
+  if (!title) {
+    emptyField.push("title");
+  }
+  if (!tech) {
+    emptyField.push("tech");
+  }
+  if (!budget) {
+    emptyField.push("budget");
+  }
+  if (!duration) {
+    emptyField.push("duration");
+  }
+  if (!manager) {
+    emptyField.push("manager");
+  }
+  if (!dev) {
+    emptyField.push("dev");
+  }
+
+  if (emptyField.length > 0) {
+    return res
+      .status(400)
+      .json({ error: "Please fill in the empty field", emptyField });
+  }
+
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(404).json({ error: "Invalid ID" });
   }
 
-  const project = await Project.findOneAndUpdate({ _id: id }, { ...req.body });
+  const project = await Project.findOneAndUpdate(
+    { _id: id },
+    { ...req.body },
+    { new: true }
+  );
 
   if (!project) {
     res.status(400).json({ error: "project not found" });
