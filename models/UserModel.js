@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
+const validator = require("validator");
 
 const Schema = mongoose.Schema;
 
@@ -16,6 +17,20 @@ const userSchema = new Schema({
 });
 
 userSchema.statics.signup = async function (email, password) {
+  if (!email || !password) {
+    throw Error("All field must be filled");
+  }
+
+  if (!validator.isEmail(email)) {
+    throw Error("Invalid Email...");
+  }
+
+  if (!validator.isStrongPassword(password)) {
+    throw Error(
+      "Password is strong. It has must be contain uppercase, lowercase, Number and Symbol and it has length must be 8 characters."
+    );
+  }
+
   const exist = await this.findOne({ email });
 
   if (exist) {
