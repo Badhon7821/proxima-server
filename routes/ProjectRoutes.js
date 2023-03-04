@@ -7,8 +7,12 @@ const {
   updateProjectController,
 } = require("../controllers/projectController");
 
+const requireAuth = require("../middleware/requireAuth");
+
 //router
 const router = express.Router();
+
+router.use(requireAuth);
 
 //get all project
 router.get("/", getAllProjectController);
